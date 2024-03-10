@@ -81,6 +81,38 @@ window.addEventListener("resize", () => {
 });
 
 /**
+ * Cursor
+ */
+
+// create a cursor variable with Vector2 and update it when the cursor is moving
+// to handle 'mouseenter' and 'mouseleave' we create cursor variable
+const cursor = new THREE.Vector2();
+
+window.addEventListener("mousemove", (event) => {
+  cursor.x = (event.clientX / sizes.width) * 2 - 1;
+  cursor.y = -(event.clientY / sizes.height) * 2 + 1;
+
+  // We should avoid casting the ray in the mousemove event callback and do it in the tick function
+});
+
+// mouse click event
+window.addEventListener("click", (_event) => {
+  if (currentHoverdObject) {
+    switch (currentHoverdObject.object) {
+      case object1:
+        console.log("click on object 1");
+        break;
+      case object2:
+        console.log("click on object 2");
+        break;
+      case object3:
+        console.log("click on object 3");
+        break;
+    }
+  }
+});
+
+/**
  * Camera
  */
 // Base camera
@@ -111,6 +143,9 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  */
 const clock = new THREE.Clock();
 
+// currently hovered object
+let currentHoverdObject = null;
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
@@ -121,14 +156,16 @@ const tick = () => {
   object3.position.y = Math.sin(elapsedTime * 1.5) * 1.5;
 
   // Now update raycaster in the tick  function
-  const rayOrigin = new THREE.Vector3(-3, 0, 0);
-  const rayDirection = new THREE.Vector3(1, 0, 0);
-  rayDirection.normalize();
+  //   const rayOrigin = new THREE.Vector3(-3, 0, 0);
+  //   const rayDirection = new THREE.Vector3(1, 0, 0);
+  //   rayDirection.normalize();
 
-  raycaster.set(rayOrigin, rayDirection);
+  //   raycaster.set(rayOrigin, rayDirection);
 
   // ##### Cast a ray #####
 
+  // To cast ray from the camera
+  raycaster.setFromCamera(cursor, camera);
   const objectsToTest = [object1, object2, object3];
   const intersects = raycaster.intersectObjects(objectsToTest);
 
@@ -143,6 +180,19 @@ const tick = () => {
   // This changes the color of object to blue for always and not only when it intersect
   for (const intersect of intersects) {
     intersect.object.material.color.set("#0000ff");
+  }
+
+  // ''mouseenter' and 'mouseleave' event handles here
+  if (intersects.length) {
+    if (currentHoverdObject === null) {
+      console.log("mouse enter");
+    }
+    currentHoverdObject = intersects[0];
+  } else {
+    if (currentHoverdObject) {
+      console.log("mouse leave");
+    }
+    currentHoverdObject = null;
   }
 
   // Update controls

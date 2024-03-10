@@ -39,3 +39,10 @@
    6. uv : the UV coordinates in that geometry.
 
 3. If we want to test things while they are moving, we have to do testing on each frame.
+
+4. We can use the raycaster to test if an object is behind the cursor. Three.js will do all the heavy lifting.
+   We need the coordinates of the mouse but not in pixels. We need a value that goes from -1 to 1, in horizontal and vertical axes.
+
+5. We should avoid casting the ray in the mousemove event callback and do it in the tick function
+
+6. Use setFromCamera(...) method to orient the ray in the right direction.
