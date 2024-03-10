@@ -44,19 +44,19 @@ scene.add(object1, object2, object3);
 const raycaster = new THREE.Raycaster();
 
 // We can use the set(...) method to set the origin and direction of ray.
-const rayOrigin = new THREE.Vector3(-3, 0, 0);
-const rayDirection = new THREE.Vector3(10, 0, 0);
+// const rayOrigin = new THREE.Vector3(-3, 0, 0);
+// const rayDirection = new THREE.Vector3(10, 0, 0);
 
-rayDirection.normalize();
+// rayDirection.normalize();
 
-raycaster.set(rayOrigin, rayDirection);
+// raycaster.set(rayOrigin, rayDirection);
 
-// ##### Cast a ray #####
-const intersect = raycaster.intersectObject(object2);
-console.log(intersect, "intersect");
+// // ##### Cast a ray #####
+// const intersect = raycaster.intersectObject(object2);
+// console.log(intersect, "intersect");
 
-const intersects = raycaster.intersectObjects([object1, object2, object3]);
-console.log(intersects, "intersecst---");
+// const intersects = raycaster.intersectObjects([object1, object2, object3]);
+// console.log(intersects, "intersecst---");
 
 /**
  * Sizes
@@ -113,6 +113,37 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Animate the sphere by using the elapsed time and Math.sin(...) in the tick function.
+
+  object1.position.y = Math.sin(elapsedTime * 0.3) * 1.5;
+  object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5;
+  object3.position.y = Math.sin(elapsedTime * 1.5) * 1.5;
+
+  // Now update raycaster in the tick  function
+  const rayOrigin = new THREE.Vector3(-3, 0, 0);
+  const rayDirection = new THREE.Vector3(1, 0, 0);
+  rayDirection.normalize();
+
+  raycaster.set(rayOrigin, rayDirection);
+
+  // ##### Cast a ray #####
+
+  const objectsToTest = [object1, object2, object3];
+  const intersects = raycaster.intersectObjects(objectsToTest);
+
+  //   console.log(intersects.length, "intersects");
+
+  // We have to set the color of object to it's initial on every render.
+  for (const object of objectsToTest) {
+    object.material.color.set("#ff0000");
+  }
+
+  // Now we will update the material of the object property for each item of 'intersects' array
+  // This changes the color of object to blue for always and not only when it intersect
+  for (const intersect of intersects) {
+    intersect.object.material.color.set("#0000ff");
+  }
 
   // Update controls
   controls.update();
