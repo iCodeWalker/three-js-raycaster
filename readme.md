@@ -46,3 +46,32 @@
 5. We should avoid casting the ray in the mousemove event callback and do it in the tick function
 
 6. Use setFromCamera(...) method to orient the ray in the right direction.
+
+7. 'mousemove' event with raycaster.
+   window.addEventListener("mousemove", (event) => {
+   cursor.x = (event.clientX / sizes.width) _ 2 - 1;
+   cursor.y = -(event.clientY / sizes.height) _ 2 + 1;
+   // We should avoid casting the ray in the mousemove event callback and do it in the tick function
+   });
+
+   'click' event
+   window.addEventListener("click", (\_event) => {
+   if (currentHoverdObject) {
+   switch (currentHoverdObject.object) {
+   case object1:
+   console.log("click on object 1");
+   break;
+   case object2:
+   console.log("click on object 2");
+   break;
+   case object3:
+   console.log("click on object 3");
+   break;
+   }
+   }
+   });
+
+8. We want the size of Duck to get bigger when the cursor enters it and revert to its normal size when the cursor leaves it.
+
+Instead of using intersectObjects(plural) we will use intersectObject(singular)
+will return an array of intersections
